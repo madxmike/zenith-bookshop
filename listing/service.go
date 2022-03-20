@@ -23,14 +23,22 @@ func NewService(store Store) Service {
 	}
 }
 
-func (s *Service) ListBook(ctx context.Context, ISBN domain.ISBN, price Price) error {
-	if _, err := s.GetListing(ctx, ISBN); err == nil {
-		return fmt.Errorf("listing for %s already exists", ISBN)
+func (s *Service) ListBook(ctx context.Context, isbn domain.ISBN, price Price) error {
+	if err := isbn.Validate(); err != nil {
+		return fmt.Errorf("isbn is not valid: %w", err)
 	}
 
-	book, err := s.store.GetBookByISBN(ctx, ISBN)
+	if err := price.Validate(); err != nil {
+		return fmt.Errorf("price is not valid: %w", err)
+	}
+
+	if _, err := s.GetListing(ctx, isbn); err == nil {
+		return fmt.Errorf("listing for %s already exists", isbn)
+	}
+
+	book, err := s.store.GetBookByISBN(ctx, isbn)
 	if err != nil {
-		return fmt.Errorf("could not get %s: %w", ISBN, err)
+		return fmt.Errorf("could not get %s: %w", isbn, err)
 	}
 
 	listing := Listing{
@@ -40,7 +48,7 @@ func (s *Service) ListBook(ctx context.Context, ISBN domain.ISBN, price Price) e
 
 	err = s.store.AddListing(ctx, listing)
 	if err != nil {
-		return fmt.Errorf("could not add listing for %s: %w", ISBN, err)
+		return fmt.Errorf("could not add listing for %s: %w", isbn, err)
 	}
 
 	return nil

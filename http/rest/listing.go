@@ -41,16 +41,6 @@ func (h *listingHandler) ListBook(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := body.ISBN.Validate(); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-
-	if err := body.Price.Validate(); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-
 	if err := h.service.ListBook(r.Context(), body.ISBN, body.Price); err != nil {
 		log.Println(err)
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
@@ -61,12 +51,7 @@ func (h *listingHandler) ListBook(w http.ResponseWriter, r *http.Request) {
 func (h *listingHandler) GetListing(w http.ResponseWriter, r *http.Request) {
 	isbn := domain.ISBN(chi.URLParam(r, "isbn"))
 
-	if err := isbn.Validate(); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-
-	listing, err := h.service.GetListing(r.Context(), domain.ISBN(isbn))
+	listing, err := h.service.GetListing(r.Context(), isbn)
 	if err != nil {
 		log.Println(err)
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
