@@ -1,2 +1,2 @@
 # zenith-bookshop
-A small ecomerce site for buying books built with zenith library
+A small ecomerce site for buying books to demonstrate principles for building web servers
