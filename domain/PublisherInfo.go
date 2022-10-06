@@ -1,6 +1,9 @@
 package domain
 
-import "time"
+import (
+	"errors"
+	"time"
+)
 
 type PublisherInfo struct {
 	Published time.Time
@@ -8,6 +11,17 @@ type PublisherInfo struct {
 }
 
 func (pi PublisherInfo) Validate() error {
-	// TODO (Michael): We do not have any requirements for this right now
+	if pi.Published.IsZero() {
+		return errors.New("published date must not be zero")
+	}
+
+	if time.Since(pi.Published) < 0 {
+		return errors.New("published date must not be in the future")
+	}
+
+	if pi.Publisher == "" {
+		return errors.New("publisher must not be empty")
+	}
+
 	return nil
 }
