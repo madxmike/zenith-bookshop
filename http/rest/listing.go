@@ -29,8 +29,6 @@ func NewListingHandler(service listing.Service) http.Handler {
 }
 
 func (h *listingHandler) ListBook(w http.ResponseWriter, r *http.Request) {
-	defer r.Body.Close()
-
 	var body struct {
 		ISBN  domain.ISBN   `json:"ISBN"`
 		Price listing.Price `json:"price"`
