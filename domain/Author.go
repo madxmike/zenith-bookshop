@@ -9,7 +9,7 @@ type Author struct {
 
 func (a Author) Validate() error {
 	if a.Name == "" {
-		return errors.New("author name must not be nil")
+		return errors.New("author name must not be empty")
 	}
 
 	return nil
