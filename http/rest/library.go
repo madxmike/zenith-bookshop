@@ -49,8 +49,6 @@ func (h *libraryHandler) GetBook(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *libraryHandler) PostBook(w http.ResponseWriter, r *http.Request) {
-	defer r.Body.Close()
-
 	var book domain.Book
 	if err := json.NewDecoder(r.Body).Decode(&book); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
